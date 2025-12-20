@@ -1,7 +1,7 @@
 fastapi>=0.95.0
 uvicorn[standard]>=0.22.0
 # Optional: install llama-cpp-python manually when adding model support
-# llama-cpp-python>=0.1.0
+# llama-cpp-python>=0.1.0  # optional: requires native build and model binaries
 
 # Testing
 pytest>=7.0

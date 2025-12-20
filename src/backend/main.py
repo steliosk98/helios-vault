@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 
-from .model import ModelStub
+from .model import get_model
 
 app = FastAPI(title="Helios Vault Backend", version="0.1.0")
 
@@ -19,8 +19,16 @@ class ChatResponse(BaseModel):
 
 @app.on_event("startup")
 async def startup_event():
-    # Initialize model stub (replace with real loader later)
-    app.state.model = ModelStub()
+    # Initialize model backend. Uses `MODEL_BACKEND` and `MODEL_PATH` env vars.
+    model_path = None
+    try:
+        import os
+
+        model_path = os.getenv("MODEL_PATH")
+    except Exception:
+        model_path = None
+
+    app.state.model = get_model(model_path=model_path)
 
 
 @app.get("/")
