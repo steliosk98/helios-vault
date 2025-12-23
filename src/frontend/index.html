@@ -3,10 +3,326 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Helios Vault — Frontend</title>
+    <title>Helios Vault — Local Chat</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4f0e7;
+        --bg-2: #efe6d3;
+        --ink: #1f1b14;
+        --muted: #6d6252;
+        --accent: #c35a22;
+        --accent-2: #f3b060;
+        --panel: #fff9ee;
+        --border: #d9cbb7;
+        --shadow: rgba(31, 27, 20, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Iowan Old Style", "Palatino", "Book Antiqua", "Times New Roman", serif;
+        color: var(--ink);
+        background: radial-gradient(circle at 15% 20%, var(--bg-2), var(--bg));
+      }
+
+      .shell {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 32px 20px 48px;
+        display: grid;
+        gap: 20px;
+      }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 32px;
+        letter-spacing: 0.5px;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 12px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        color: var(--muted);
+      }
+
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #b13a2a;
+        box-shadow: 0 0 10px rgba(177, 58, 42, 0.5);
+      }
+
+      .status-dot.ok {
+        background: #2f7a4a;
+        box-shadow: 0 0 10px rgba(47, 122, 74, 0.4);
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 18px;
+        box-shadow: 0 12px 30px var(--shadow);
+      }
+
+      .intro {
+        display: grid;
+        gap: 10px;
+        font-size: 15px;
+        color: var(--muted);
+      }
+
+      .chat {
+        display: grid;
+        gap: 12px;
+        min-height: 360px;
+      }
+
+      .messages {
+        display: grid;
+        gap: 10px;
+        max-height: 360px;
+        overflow: auto;
+        padding-right: 6px;
+      }
+
+      .msg {
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: #fffdf7;
+        font-size: 15px;
+        line-height: 1.4;
+      }
+
+      .msg.user {
+        border-color: var(--accent);
+        background: #fff4e5;
+      }
+
+      .msg .label {
+        display: block;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+
+      form {
+        display: grid;
+        gap: 10px;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 80px;
+        resize: vertical;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        font-family: "Courier New", Courier, monospace;
+        font-size: 13px;
+        background: #fffdf7;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      button {
+        border: none;
+        border-radius: 999px;
+        padding: 10px 18px;
+        font-size: 14px;
+        background: linear-gradient(120deg, var(--accent), var(--accent-2));
+        color: #fffdf7;
+        cursor: pointer;
+        letter-spacing: 0.04em;
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: wait;
+      }
+
+      @media (max-width: 720px) {
+        .shell {
+          padding: 24px 16px 40px;
+        }
+
+        h1 {
+          font-size: 26px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Helios Vault</h1>
-    <p>Frontend placeholder. Connect to the backend at <code>/</code> and <code>/health</code>.</p>
+    <div class="shell">
+      <header>
+        <h1>Helios Vault</h1>
+        <div class="status" id="status">
+          <span class="status-dot" id="status-dot"></span>
+          <span id="status-text">offline</span>
+        </div>
+      </header>
+
+      <section class="panel intro">
+        <strong>Local Chat Console</strong>
+        <span>Connects to the offline FastAPI backend at <code>/chat</code> or <code>/chat/stream</code>.</span>
+        <span id="model-info">Model: unknown</span>
+      </section>
+
+      <section class="panel chat">
+        <div class="messages" id="messages"></div>
+        <form id="chat-form">
+          <textarea id="message" placeholder="Ask a survival question or request guidance."></textarea>
+          <div class="controls">
+            <label class="toggle">
+              <input type="checkbox" id="use-stream" checked />
+              Stream response
+            </label>
+            <button type="submit" id="send">Send</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <script>
+      const statusDot = document.getElementById("status-dot");
+      const statusText = document.getElementById("status-text");
+      const modelInfo = document.getElementById("model-info");
+      const messages = document.getElementById("messages");
+      const form = document.getElementById("chat-form");
+      const input = document.getElementById("message");
+      const useStream = document.getElementById("use-stream");
+      const sendButton = document.getElementById("send");
+
+      function addMessage(label, text, isUser = false) {
+        const box = document.createElement("div");
+        box.className = `msg${isUser ? " user" : ""}`;
+        const labelEl = document.createElement("span");
+        labelEl.className = "label";
+        labelEl.textContent = label;
+        const textEl = document.createElement("div");
+        textEl.textContent = text;
+        box.append(labelEl, textEl);
+        messages.appendChild(box);
+        messages.scrollTop = messages.scrollHeight;
+        return textEl;
+      }
+
+      async function loadStatus() {
+        try {
+          const res = await fetch("/health");
+          if (!res.ok) throw new Error("health failed");
+          const data = await res.json();
+          statusDot.classList.add("ok");
+          statusText.textContent = "online";
+          if (data.model) {
+            const model = data.model;
+            const name = model.name || "unknown";
+            const backend = model.backend || "unknown";
+            const loaded = model.loaded ? "loaded" : "lazy";
+            modelInfo.textContent = `Model: ${name} (${backend}, ${loaded})`;
+          }
+        } catch (err) {
+          statusDot.classList.remove("ok");
+          statusText.textContent = "offline";
+          modelInfo.textContent = "Model: unavailable";
+        }
+      }
+
+      async function sendChat(message, stream) {
+        if (stream) {
+          const res = await fetch("/chat/stream", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message }),
+          });
+          if (!res.ok || !res.body) {
+            const text = await res.text();
+            throw new Error(text || "Stream failed");
+          }
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder();
+          let done = false;
+          const replyEl = addMessage("Vault", "", false);
+          while (!done) {
+            const result = await reader.read();
+            done = result.done;
+            if (result.value) {
+              replyEl.textContent += decoder.decode(result.value, { stream: true });
+              messages.scrollTop = messages.scrollHeight;
+            }
+          }
+          return;
+        }
+
+        const res = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message }),
+        });
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || "Chat failed");
+        }
+        const data = await res.json();
+        addMessage(data.model || "Vault", data.reply || "");
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const message = input.value.trim();
+        if (!message) return;
+        input.value = "";
+        addMessage("You", message, true);
+        sendButton.disabled = true;
+        try {
+          await sendChat(message, useStream.checked);
+        } catch (err) {
+          addMessage("Error", err.message || "Request failed");
+        } finally {
+          sendButton.disabled = false;
+        }
+      });
+
+      loadStatus();
+    </script>
   </body>
 </html>

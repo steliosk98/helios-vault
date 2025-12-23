@@ -42,6 +42,59 @@ Helios Vault aims to:
 
 ---
 
+## 🧪 Development (Local)
+Run the backend locally (stub model by default):
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+./scripts/run.sh
+```
+
+Backend endpoints:
+- `GET /` (serves local chat UI)
+- `GET /status` (status)
+- `GET /health` (includes model status)
+- `POST /chat`
+- `POST /chat/stream` (plain-text streaming)
+
+Runtime configuration (copy `.env.example` to `.env` or export manually):
+- `MODEL_BACKEND` = `auto` | `stub` | `llama`
+- `MODEL_PATH` = path to a GGUF model
+- `MODEL_N_CTX`, `MODEL_THREADS`, `MODEL_TEMPERATURE`, `MODEL_MAX_TOKENS`
+
+---
+
+## 📦 Model Downloads (Optional)
+Helios Vault includes a manifest of recommended GGUF models for different hardware tiers.
+Download them after cloning (kept out of git):
+
+```bash
+python3 scripts/fetch_models.py --list
+python3 scripts/fetch_models.py --tier 0 --tier 1 --tier 2
+```
+
+Optional Tier 3 model (very large):
+
+```bash
+python3 scripts/fetch_models.py --tier 3 --include-optional
+```
+
+Notes:
+- The manifest lives at `models_manifest.json`.
+- Some GGUF filenames can change; if a download fails, update the manifest entry.
+- Add `sha256` values to enable checksum verification.
+- The manifest uses public URLs; no auth tokens are required.
+
+Update checksums after downloads:
+
+```bash
+python3 scripts/update_manifest_checksums.py --all
+```
+
+---
+
 ## 🧠 Technology Overview
 Helios Vault will be built on a foundation of:
 
