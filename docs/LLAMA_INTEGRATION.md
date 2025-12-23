@@ -24,6 +24,10 @@ Model files
 Environment variables
 - `MODEL_PATH` — full path to model file (e.g. `/data/models/llama-7b.gguf`)
 - `MODEL_BACKEND` — backend selection: `auto` (default), `stub`, or `llama`
+- `MODEL_N_CTX` — context window size (default `2048`)
+- `MODEL_THREADS` — CPU threads for inference (default `4`)
+- `MODEL_TEMPERATURE` — sampling temperature (default `0.7`)
+- `MODEL_MAX_TOKENS` — max tokens per response (default `256`)
 
 Run the server with the real backend
 
@@ -31,6 +35,13 @@ Run the server with the real backend
 export MODEL_PATH=/path/to/your/model.gguf
 export MODEL_BACKEND=llama
 ./scripts/run.sh
+```
+
+Download models with the manifest
+
+```bash
+python3 scripts/fetch_models.py --list
+python3 scripts/fetch_models.py --tier 0 --tier 1 --tier 2
 ```
 
 Test the `/chat` endpoint

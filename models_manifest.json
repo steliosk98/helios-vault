@@ -1,0 +1,83 @@
+{
+  "version": "1.0",
+  "source": "public-urls",
+  "models": [
+    {
+      "id": "tinyllama-1.1b-q4",
+      "tier": 0,
+      "name": "TinyLlama 1.1B Chat v1.0 (Q4_K_M)",
+      "repo": "TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF",
+      "file": "tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+      "size_gb": 0.7,
+      "sha256": "9fecc3b3cd76bba89d504f29b616eedf7da85b96540e490ca5824d3f7d2776a0",
+      "optional": false,
+      "notes": "Small SBC-friendly model. Verify filename in repo if download fails."
+    },
+    {
+      "id": "phi2-q4",
+      "tier": 0,
+      "name": "Phi-2 (Q4_K_M)",
+      "repo": "TheBloke/phi-2-GGUF",
+      "file": "phi-2.Q4_K_M.gguf",
+      "size_gb": 1.6,
+      "sha256": null,
+      "optional": false,
+      "notes": "Compact model. Verify filename in repo if download fails."
+    },
+    {
+      "id": "mistral-7b-q4",
+      "tier": 1,
+      "name": "Mistral 7B Instruct v0.2 (Q4_K_M)",
+      "repo": "TheBloke/Mistral-7B-Instruct-v0.2-GGUF",
+      "file": "mistral-7b-instruct-v0.2.Q4_K_M.gguf",
+      "size_gb": 4.1,
+      "sha256": null,
+      "optional": false,
+      "notes": "Balanced CPU model. Verify filename in repo if download fails."
+    },
+    {
+      "id": "openhermes-2.5-mistral-7b-q4",
+      "tier": 1,
+      "name": "OpenHermes 2.5 Mistral 7B (Q4_K_M)",
+      "repo": "TheBloke/OpenHermes-2.5-Mistral-7B-GGUF",
+      "file": "openhermes-2.5-mistral-7b.Q4_K_M.gguf",
+      "size_gb": 4.2,
+      "sha256": null,
+      "optional": false,
+      "notes": "Instruction-tuned. Verify filename in repo if download fails."
+    },
+    {
+      "id": "stablelm-2-12b-q4",
+      "tier": 2,
+      "name": "StableLM 2 12B Chat (Q4_K_M)",
+      "repo": "TheBloke/stablelm-2-12b-chat-GGUF",
+      "file": "stablelm-2-12b-chat.Q4_K_M.gguf",
+      "size_gb": 8.0,
+      "sha256": null,
+      "optional": false,
+      "notes": "Desktop-tier. Verify filename in repo if download fails."
+    },
+    {
+      "id": "yi-1.5-9b-chat-q4",
+      "tier": 2,
+      "name": "Yi 1.5 9B Chat (Q4_K_M)",
+      "repo": "TheBloke/Yi-1.5-9B-Chat-GGUF",
+      "file": "yi-1.5-9b-chat.Q4_K_M.gguf",
+      "size_gb": 6.5,
+      "sha256": null,
+      "optional": false,
+      "notes": "Mid-size option. Verify filename in repo if download fails."
+    },
+    {
+      "id": "mixtral-8x7b-q4",
+      "tier": 3,
+      "name": "Mixtral 8x7B Instruct v0.1 (Q4_K_M)",
+      "repo": "TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF",
+      "file": "mixtral-8x7b-instruct-v0.1.Q4_K_M.gguf",
+      "size_gb": 26.0,
+      "sha256": null,
+      "optional": true,
+      "notes": "Optional high-end tier. Verify filename in repo if download fails."
+    }
+  ]
+}
